@@ -132,3 +132,11 @@ with tab3:
             'importance': model.feature_importances_
         }).sort_values('importance', ascending=False).head(5)
         st.dataframe(importance, hide_index=True, use_container_width=True)
+with tab4:
+    st.header("Model vs. Reality")
+    st.caption("Real examples from the held-out test set — including a mistake, not just wins")
+    reality_df = pd.read_csv("models/model_vs_reality.csv")
+    reality_df['actual'] = reality_df['actual'].map({0: 'Honest', 1: 'Risky'})
+    reality_df['predicted'] = reality_df['predicted'].map({0: 'Honest', 1: 'Risky'})
+    reality_df['correct'] = reality_df['correct'].map({True: '✅', False: '❌'})
+    st.dataframe(reality_df, use_container_width=True, hide_index=True)
