@@ -13,7 +13,7 @@ st.set_page_config(page_title="Return Risk Scorer", layout="centered")
 st.title("🎯 Return Risk Scorer")
 st.caption("Built for Razorpay AI Buildathon — Track 02: AI Risk Manager")
 
-tab1, tab2, tab3 = st.tabs(["📋 Problem", "📊 Model Performance", "🔍 Try It Live"])
+tab1, tab2, tab3, tab4 = st.tabs(["📋 Problem", "📊 Model Performance", "🔍 Try It Live","✅ Model vs Reality"])
 
 # ---------------- TAB 1: PROBLEM ----------------
 with tab1:
