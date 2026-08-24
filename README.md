@@ -12,6 +12,7 @@
 
 - [Problem](#problem)
 - [Solution](#solution)
+- [Architecture](#architecture)
 - [Results](#results)
 - [Project Structure](#project-structure)
 - [Setup — Run Locally](#setup--run-locally)
@@ -35,6 +36,20 @@ A model that scores every return request **Low / Medium / High risk** using only
 | 🟢 Low | Auto-approve refund |
 | 🟡 Medium | Flag for human review |
 | 🔴 High | Hold refund, request more info |
+
+## Architecture
+
+```
+Return request → Risk model (XGBoost) → Score + action (approve / review / hold)
+```
+
+![Return risk scorer architecture](assets/architecture.png)
+
+1. **Return request** — customer submits a return with order and item details
+2. **Risk model** — the noise-adjusted XGBoost model scores it using only pre-decision-time features (no investigation-only signals)
+3. **Merchant action** — score maps to a recommendation: auto-approve, flag for review, or hold pending more info
+
+The model never auto-executes an irreversible action — medium/high-risk cases always route to a human for the final call.
 
 ## Results
 
@@ -69,6 +84,8 @@ Full breakdown, live scoring, and real test-set examples (including mistakes) ar
 razorpay-return-risk-scorer/
 ├── app/
 │   └── app.py                  # Streamlit demo (4 tabs: Problem, Performance, Live, Reality check)
+├── assets/
+│   └── architecture.png        # architecture diagram used above
 ├── models/
 │   ├── return_risk_model.pkl   # trained XGBoost model
 │   ├── model_columns.json      # exact feature columns/order the model expects
