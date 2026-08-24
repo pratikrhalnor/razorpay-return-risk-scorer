@@ -43,8 +43,8 @@ A model that scores every return request **Low / Medium / High risk** using only
 Return request → Risk model (XGBoost) → Score + action (approve / review / hold)
 ```
 
-![Return risk scorer architecture](assets/architecture.png)
 
+![Return risk scorer architecture](assets/architecture.png)
 1. **Return request** — customer submits a return with order and item details
 2. **Risk model** — the noise-adjusted XGBoost model scores it using only pre-decision-time features (no investigation-only signals)
 3. **Merchant action** — score maps to a recommendation: auto-approve, flag for review, or hold pending more info
@@ -84,8 +84,6 @@ Full breakdown, live scoring, and real test-set examples (including mistakes) ar
 razorpay-return-risk-scorer/
 ├── app/
 │   └── app.py                  # Streamlit demo (4 tabs: Problem, Performance, Live, Reality check)
-├── assets/
-│   └── architecture.png        # architecture diagram used above
 ├── models/
 │   ├── return_risk_model.pkl   # trained XGBoost model
 │   ├── model_columns.json      # exact feature columns/order the model expects
@@ -148,6 +146,7 @@ To retrain on your own return/order data instead of the sample dataset:
 
 ## Tech Stack
 
+- **Dataset:** [Kaggle — E-Commerce Return Abuse Detection Dataset](https://www.kaggle.com/datasets/sarveshchhetri/e-commerce-return-abuse-detection-dataset)
 - **Model:** XGBoost (gradient-boosted trees)
 - **Data processing:** pandas, scikit-learn
 - **Demo UI:** Streamlit
@@ -156,7 +155,9 @@ To retrain on your own return/order data instead of the sample dataset:
 
 ## Data & Honesty Notes
 
-Trained on a 60,000-row synthetic e-commerce return dataset (Kaggle). During development we found the dataset's original labels were reproducible almost perfectly (~98%) by even a 3-question decision tree — a sign the labels were rule-generated rather than modeled on messy real-world behavior. We:
+**Dataset:** [E-Commerce Return Abuse Detection Dataset](https://www.kaggle.com/datasets/sarveshchhetri/e-commerce-return-abuse-detection-dataset) (Kaggle, synthetic, 60,000 rows) — 35 features, labeled Legitimate / Policy Abuser / Fraudulent Return / Wardrobing.
+
+During development we found the dataset's original labels were reproducible almost perfectly (~98%) by even a 3-question decision tree — a sign the labels were rule-generated rather than modeled on messy real-world behavior. We:
 
 1. Identified and removed columns that leaked the label directly (e.g. a pre-calculated return-rate percentage highly correlated with the target)
 2. Removed "investigation-time" columns a merchant wouldn't know at the moment of the return request (packaging condition, photo evidence, dispute count, etc.) to keep the feature set realistic
